@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/getsentry/sentry-go"
 	"log"
+	"net/http"
 	"os"
 	"telcompiler/api"
 	"telcompiler/bot"
@@ -23,8 +24,13 @@ func main() {
 	api.InitAPIClient()
 	bot.Commands()
 	go bot.ProcessUpdate()
+	go global.Bot.Start()
 	log.Println("bot started")
-	global.Bot.Start()
+	_ = http.ListenAndServe(os.Getenv("PORT"), http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			_, _ = w.Write([]byte("ok"))
+		},
+	))
 }
 
 func initSentry() error {
