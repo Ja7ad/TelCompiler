@@ -9,14 +9,12 @@ import (
 	"strings"
 	"telcompiler/api"
 	"telcompiler/global"
-	"time"
 )
 
 func InitBot() error {
 	bot, err := telebot.NewBot(telebot.Settings{
 		Token:   os.Getenv("TOKEN"),
-		Poller:  &telebot.LongPoller{Timeout: 5 * time.Second},
-		Updates: 1000,
+		Updates: 2000,
 	})
 	if err != nil {
 		return err
@@ -45,14 +43,16 @@ func processCompileCode(message *telebot.Message) {
 	res, err := api.RequestCompileCode(languageCode, message.Text)
 	if err != nil {
 		sentry.CaptureException(err)
+		log.Printf("error on request %v", err)
 	}
-	if _, err := global.Bot.Reply(message, normalizeReplayMessage(message, res), &telebot.SendOptions{ParseMode: telebot.ModeHTML}); err != nil {
+	if _, err := global.Bot.Reply(message, normalizeReplayMessage(message, res), &telebot.SendOptions{ParseMode: telebot.ModeMarkdownV2}); err != nil {
 		sentry.CaptureException(err)
+		log.Printf("error on replay %v", err)
 	}
 }
 
 func normalizeReplayMessage(msg *telebot.Message, result *api.Result) string {
-	return fmt.Sprintf(MSG_CODE, result.Language, msg.Sender.Username, checkCodeSize(msg.Text), resultCode(result), result.Stats, os.Getenv("BOT_PROVIDER"))
+	return fmt.Sprintf(codeMessage(), result.Language, msg.Sender.Username, checkCodeSize(msg.Text), resultCode(result), result.Stats, os.Getenv("BOT_PROVIDER"))
 }
 
 func getLanguageCode(msg string) int {

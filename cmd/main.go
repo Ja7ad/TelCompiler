@@ -4,6 +4,7 @@ import (
 	"expvar"
 	"fmt"
 	"github.com/getsentry/sentry-go"
+	"gopkg.in/telebot.v3/middleware"
 	"log"
 	"net/http"
 	"net/http/pprof"
@@ -25,6 +26,7 @@ func main() {
 		log.Fatalf("error on initilize bot %v", err)
 	}
 	api.InitAPIClient()
+	global.Bot.Use(middleware.Logger())
 	bot.Commands()
 	go bot.ProcessUpdate()
 	log.Println("bot started")

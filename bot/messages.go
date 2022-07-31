@@ -13,23 +13,17 @@ const (
 <b>/about - اطلاعات نویسنده ربات</b>
 <b>/help - راهنمای ربات</b>
 `
-	MSG_CODE = `
-<b>زبان :</b> %s
-<b>کاربر :</b> <i>@%s</i>
-
-<b>کد ارسال شده :</b> 
-
-<code>%s</code>
-
-<b>نتیجه :</b> 
-
-<code>%s</code>
-
-<b>منابع مصرف شده : </b> 
-
-<code>%s</code>
-
-%s
-
-`
 )
+
+func codeMessage() string {
+	msg := "*زبان :* %s \n"
+	msg += "*کاربر :* @%s \n"
+	msg += "\n*کد ارسال شده :*\n"
+	msg += "\n`%s`\n"
+	msg += "*نتیجه :*\n"
+	msg += "\n`%s`\n"
+	msg += "*منابع مصرف شده :*\n"
+	msg += "\n`%s`\n\n"
+	msg += "%s"
+	return msg
+}
