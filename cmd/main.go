@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/getsentry/sentry-go"
 	"log"
 	"net/http"
@@ -24,13 +25,16 @@ func main() {
 	api.InitAPIClient()
 	bot.Commands()
 	go bot.ProcessUpdate()
-	go global.Bot.Start()
 	log.Println("bot started")
-	_ = http.ListenAndServe(os.Getenv("PORT"), http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			_, _ = w.Write([]byte("ok"))
-		},
-	))
+	go func() {
+		_ = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), http.HandlerFunc(
+			func(w http.ResponseWriter, r *http.Request) {
+				_, _ = w.Write([]byte("telcompiler is okey!!"))
+			},
+		))
+	}()
+	global.Bot.Start()
+
 }
 
 func initSentry() error {
