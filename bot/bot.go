@@ -27,8 +27,10 @@ func ProcessUpdate() {
 	for {
 		select {
 		case up := <-global.Bot.Updates:
-			if up.Message.ReplyTo != nil {
-				go processCompileCode(up.Message)
+			if up.Message != nil {
+				if up.Message.ReplyTo != nil {
+					go processCompileCode(up.Message)
+				}
 			}
 		}
 	}
