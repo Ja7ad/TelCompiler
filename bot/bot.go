@@ -46,7 +46,7 @@ func processCompileCode(message *telebot.Message) {
 		log.Printf("error on request %v", err)
 	}
 	msg := normalizeReplayMessage(message, res)
-	if _, err := global.Bot.Reply(message, msg, &telebot.SendOptions{ParseMode: telebot.ModeMarkdownV2}); err != nil {
+	if _, err := global.Bot.Reply(message, msg, &telebot.SendOptions{ParseMode: telebot.ModeMarkdown}); err != nil {
 		sentry.CaptureException(err)
 		log.Printf("error on replay %v\n msg %v", err, msg)
 	}
