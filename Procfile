@@ -1,1 +1,1 @@
-web: bin/telcompiler
+web: bin/cmd
