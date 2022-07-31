@@ -1,10 +1,12 @@
 package main
 
 import (
+	"expvar"
 	"fmt"
 	"github.com/getsentry/sentry-go"
 	"log"
 	"net/http"
+	"net/http/pprof"
 	"os"
 	"telcompiler/api"
 	"telcompiler/bot"
@@ -27,11 +29,9 @@ func main() {
 	go bot.ProcessUpdate()
 	log.Println("bot started")
 	go func() {
-		_ = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), http.HandlerFunc(
-			func(w http.ResponseWriter, r *http.Request) {
-				_, _ = w.Write([]byte("telcompiler is okey!!"))
-			},
-		))
+		if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), pprofService()); err != nil {
+			log.Fatal(err)
+		}
 	}()
 	global.Bot.Start()
 
@@ -46,4 +46,20 @@ func initSentry() error {
 	}
 	defer sentry.Flush(2 * time.Second)
 	return nil
+}
+
+func pprofService() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", healthCheck)
+	mux.HandleFunc("/debug/pprof/", pprof.Index)
+	mux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	mux.Handle("/debug/vars", expvar.Handler())
+	return mux
+}
+
+func healthCheck(w http.ResponseWriter, r *http.Request) {
+	_, _ = w.Write([]byte("telcompiler is okey!!"))
 }
