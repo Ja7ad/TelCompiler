@@ -45,9 +45,10 @@ func processCompileCode(message *telebot.Message) {
 		sentry.CaptureException(err)
 		log.Printf("error on request %v", err)
 	}
-	if _, err := global.Bot.Reply(message, normalizeReplayMessage(message, res), &telebot.SendOptions{ParseMode: telebot.ModeMarkdownV2}); err != nil {
+	msg := normalizeReplayMessage(message, res)
+	if _, err := global.Bot.Reply(message, msg, &telebot.SendOptions{ParseMode: telebot.ModeMarkdownV2}); err != nil {
 		sentry.CaptureException(err)
-		log.Printf("error on replay %v", err)
+		log.Printf("error on replay %v\n msg %v", err, msg)
 	}
 }
 
