@@ -55,7 +55,7 @@ func botResponseMessage() string {
 }
 
 func checkMessageSize(code string) string {
-	if len(code) > 500 {
+	if len(code) > 250 {
 		return "Character size is limited in Telegram"
 	}
 	return code
