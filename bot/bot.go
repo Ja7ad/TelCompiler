@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 	"strings"
-	"telcompiler/api"
+	"telcompiler/api/rextester"
 	"telcompiler/global"
 )
 
@@ -42,7 +42,7 @@ func processCompileCode(message *telebot.Message) {
 	if languageCode == 0 {
 		return
 	}
-	res, err := api.RequestCompileCode(languageCode, message.Text)
+	res, err := rextester.RequestCompileCode(languageCode, message.Text)
 	if err != nil {
 		sentry.CaptureException(err)
 		log.Printf("error on request %v", err)
@@ -54,8 +54,8 @@ func processCompileCode(message *telebot.Message) {
 	}
 }
 
-func normalizeReplayMessage(msg *telebot.Message, result *api.Result) string {
-	return fmt.Sprintf(codeMessage(), result.Language, msg.Sender.Username, escapeSpecialChar(checkMessageSize(msg.Text)), escapeSpecialChar(resultCode(result)), result.Stats, os.Getenv("BOT_PROVIDER"))
+func normalizeReplayMessage(msg *telebot.Message, result *rextester.Result) string {
+	return fmt.Sprintf(botResponseMessage(), result.Language, msg.Sender.Username, escapeSpecialChar(checkMessageSize(msg.Text)), escapeSpecialChar(resultCode(result)), result.Stats, os.Getenv("BOT_PROVIDER"))
 }
 
 func getLanguageCode(msg string) int {

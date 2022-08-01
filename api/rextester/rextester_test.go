@@ -1,12 +1,25 @@
-package api
+package rextester
 
 import (
+	"crypto/tls"
+	"github.com/valyala/fasthttp"
 	"sync"
+	"telcompiler/global"
 	"testing"
+	"time"
 )
 
+func init() {
+	global.Client = &fasthttp.Client{
+		Name:                     "telCompiler_test",
+		NoDefaultUserAgentHeader: true,
+		TLSConfig:                &tls.Config{InsecureSkipVerify: true},
+		MaxConnsPerHost:          5000,
+		MaxIdleConnDuration:      5 * time.Second,
+	}
+}
+
 func TestAPIRequest(t *testing.T) {
-	InitAPIClient()
 	tests := []struct {
 		LanguageCode int
 		Code         string
@@ -73,7 +86,6 @@ func TestAPIRequest(t *testing.T) {
 }
 
 func TestNormalizeStats(t *testing.T) {
-	InitAPIClient()
 	test := &rexTesterRequest{
 		LanguageChoiceWrapper: 20,
 		Program: `
@@ -90,6 +102,6 @@ func TestNormalizeStats(t *testing.T) {
 		t.Error(err)
 	}
 	res := &Result{}
-	res.NormalizeStats(resp)
+	res.NormalizeStats(resp.Stats)
 	t.Log(res.Stats)
 }

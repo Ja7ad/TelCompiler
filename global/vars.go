@@ -1,11 +1,11 @@
 package global
 
 import (
-	"gopkg.in/resty.v1"
+	"github.com/valyala/fasthttp"
 	"gopkg.in/telebot.v3"
 )
 
 var (
 	Bot    *telebot.Bot
-	Client *resty.Client
+	Client *fasthttp.Client
 )

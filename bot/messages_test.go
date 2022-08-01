@@ -6,5 +6,15 @@ import (
 )
 
 func TestFormat(t *testing.T) {
-	fmt.Println(fmt.Sprintf(MSG_CODE, "golang", "hello world", "a", "b", "c", "d"))
+	t.Logf(fmt.Sprintf(botResponseMessage(), "python", "test", "print('hello')", "hello world", "example stats", "@test"))
+}
+
+func TestEscapeChars(t *testing.T) {
+	test := "` _ + = [ ] ) ( { } | - >"
+	want := "\\` \\_ \\+ \\= \\[ \\] \\) \\( \\{ \\} \\| \\- \\>"
+	escaped := escapeSpecialChar(test)
+	if escaped != want {
+		t.Errorf("want %s but got %s", want, escaped)
+	}
+	t.Log(escaped)
 }

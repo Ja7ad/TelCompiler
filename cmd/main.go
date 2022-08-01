@@ -1,15 +1,16 @@
 package main
 
 import (
+	"crypto/tls"
 	"expvar"
 	"fmt"
 	"github.com/getsentry/sentry-go"
+	"github.com/valyala/fasthttp"
 	"gopkg.in/telebot.v3/middleware"
 	"log"
 	"net/http"
 	"net/http/pprof"
 	"os"
-	"telcompiler/api"
 	"telcompiler/bot"
 	"telcompiler/global"
 	"time"
@@ -25,7 +26,7 @@ func main() {
 		sentry.CaptureException(err)
 		log.Fatalf("error on initilize bot %v", err)
 	}
-	api.InitAPIClient()
+	initClient()
 	global.Bot.Use(middleware.Logger())
 	bot.Commands()
 	go bot.ProcessUpdate()
@@ -48,6 +49,16 @@ func initSentry() error {
 	}
 	defer sentry.Flush(2 * time.Second)
 	return nil
+}
+
+func initClient() {
+	global.Client = &fasthttp.Client{
+		Name:                     "telCompiler",
+		NoDefaultUserAgentHeader: true,
+		TLSConfig:                &tls.Config{InsecureSkipVerify: true},
+		MaxConnsPerHost:          5000,
+		MaxIdleConnDuration:      5 * time.Second,
+	}
 }
 
 func pprofService() *http.ServeMux {

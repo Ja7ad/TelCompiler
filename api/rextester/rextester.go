@@ -1,11 +1,10 @@
-package api
+package rextester
 
 import (
 	"encoding/json"
 	"errors"
-	"gopkg.in/resty.v1"
 	"strings"
-	"telcompiler/global"
+	"telcompiler/api/client"
 )
 
 const rexTesterAddress = "https://rextester.com/rundotnet/Run"
@@ -53,10 +52,6 @@ type Result struct {
 	Result   string `json:"result"`
 	Stats    string `json:"stats"`
 	Warnings string `json:"warnings"`
-}
-
-func InitAPIClient() {
-	global.Client = resty.New()
 }
 
 func RequestCompileCode(languageCode int, code string) (*Result, error) {
@@ -127,13 +122,11 @@ func (r *rexTesterResponse) Language() string {
 
 func apiRequest(body *rexTesterRequest) (*rexTesterResponse, error) {
 	response := &rexTesterResponse{}
-	resp, err := global.Client.R().
-		SetHeader("Content-Type", "application/json").
-		SetBody(body).Post(rexTesterAddress)
+	resp, err := client.APIRequest(rexTesterAddress, body)
 	if err != nil {
 		return nil, err
 	}
-	if err := json.Unmarshal(resp.Body(), response); err != nil {
+	if err := json.Unmarshal(resp, response); err != nil {
 		return nil, err
 	}
 	response.languageCode = body.LanguageChoiceWrapper

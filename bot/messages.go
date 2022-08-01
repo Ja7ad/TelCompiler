@@ -2,7 +2,7 @@ package bot
 
 import (
 	"strings"
-	"telcompiler/api"
+	"telcompiler/api/rextester"
 )
 
 const (
@@ -41,7 +41,7 @@ var escapeSpecialChars = strings.NewReplacer(
 	"!", "\\!",
 )
 
-func codeMessage() string {
+func botResponseMessage() string {
 	msg := "*زبان :* %s \n"
 	msg += "*کاربر :* @%s \n"
 	msg += "\n*کد ارسال شده :*\n"
@@ -65,7 +65,7 @@ func escapeSpecialChar(msg string) string {
 	return escapeSpecialChars.Replace(msg)
 }
 
-func resultCode(result *api.Result) string {
+func resultCode(result *rextester.Result) string {
 	res := ""
 	if len(result.Result) != 0 {
 		res = result.Result
