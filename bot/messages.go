@@ -45,7 +45,7 @@ func botResponseMessage() string {
 	msg := "*زبان :* %s \n"
 	msg += "*کاربر :* @%s \n"
 	msg += "\n*کد ارسال شده :*\n"
-	msg += "\n`%s`\n"
+	msg += "\n`%s`\n\n"
 	msg += "*نتیجه :*\n"
 	msg += "\n`%s`\n"
 	msg += "*منابع مصرف شده :*\n"
