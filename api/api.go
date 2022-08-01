@@ -115,7 +115,7 @@ func (r *rexTesterResponse) Language() string {
 	case 6:
 		return "C"
 	case 7:
-		return "C++"
+		return "Cpp"
 	case 24:
 		return "Python"
 	case 46:

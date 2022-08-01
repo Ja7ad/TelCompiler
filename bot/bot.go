@@ -48,14 +48,14 @@ func processCompileCode(message *telebot.Message) {
 		log.Printf("error on request %v", err)
 	}
 	msg := normalizeReplayMessage(message, res)
-	if _, err := global.Bot.Reply(message, msg, &telebot.SendOptions{ParseMode: telebot.ModeMarkdown}); err != nil {
+	if _, err := global.Bot.Reply(message, msg, &telebot.SendOptions{ParseMode: telebot.ModeMarkdownV2}); err != nil {
 		sentry.CaptureException(err)
 		log.Printf("error on replay %v\n msg %v", err, msg)
 	}
 }
 
 func normalizeReplayMessage(msg *telebot.Message, result *api.Result) string {
-	return fmt.Sprintf(codeMessage(), result.Language, msg.Sender.Username, checkCodeSize(msg.Text), resultCode(result), result.Stats, os.Getenv("BOT_PROVIDER"))
+	return fmt.Sprintf(codeMessage(), result.Language, msg.Sender.Username, escapeSpecialChar(checkMessageSize(msg.Text)), escapeSpecialChar(resultCode(result)), result.Stats, os.Getenv("BOT_PROVIDER"))
 }
 
 func getLanguageCode(msg string) int {
@@ -72,25 +72,4 @@ func getLanguageCode(msg string) int {
 	} else {
 		return 0
 	}
-}
-
-func checkCodeSize(code string) string {
-	if len(code) > 500 {
-		return "Character size is limited in Telegram"
-	}
-	return code
-}
-
-func resultCode(result *api.Result) string {
-	res := ""
-	if len(result.Result) != 0 {
-		res = result.Result
-	}
-	if len(result.Errors) != 0 {
-		res = result.Errors
-	}
-	if len(result.Warnings) != 0 {
-		res = result.Warnings
-	}
-	return res
 }

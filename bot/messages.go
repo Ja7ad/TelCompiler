@@ -1,5 +1,10 @@
 package bot
 
+import (
+	"strings"
+	"telcompiler/api"
+)
+
 const (
 	MSG_START = "جهت دیدن راهنمای ربات کامپایلر دستور /help را بفرستید."
 	MSG_HELP  = `
@@ -15,6 +20,27 @@ const (
 `
 )
 
+var escapeSpecialChars = strings.NewReplacer(
+	"_", "\\_",
+	"*", "\\*",
+	"[", "\\[",
+	"]", "\\]",
+	"(", "\\(",
+	")", "\\)",
+	"~", "\\~",
+	"`", "\\`",
+	">", "\\>",
+	"#", "\\#",
+	"+", "\\+",
+	"-", "\\-",
+	"=", "\\=",
+	"|", "\\|",
+	"{", "\\{",
+	"}", "\\}",
+	".", "\\.",
+	"!", "\\!",
+)
+
 func codeMessage() string {
 	msg := "*زبان :* %s \n"
 	msg += "*کاربر :* @%s \n"
@@ -26,4 +52,29 @@ func codeMessage() string {
 	msg += "\n`%s`\n\n"
 	msg += "%s"
 	return msg
+}
+
+func checkMessageSize(code string) string {
+	if len(code) > 500 {
+		return "Character size is limited in Telegram"
+	}
+	return code
+}
+
+func escapeSpecialChar(msg string) string {
+	return escapeSpecialChars.Replace(msg)
+}
+
+func resultCode(result *api.Result) string {
+	res := ""
+	if len(result.Result) != 0 {
+		res = result.Result
+	}
+	if len(result.Errors) != 0 {
+		res = result.Errors
+	}
+	if len(result.Warnings) != 0 {
+		res = result.Warnings
+	}
+	return res
 }
