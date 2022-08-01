@@ -1,0 +1,6 @@
+{
+  "name": "TelCompiler",
+  "description": "online code compiler telegram bot",
+  "repository": "https://github.com/Ja7ad/TelCompiler",
+  "keywords": ["go", "fasthttp", "telebot"]
+}
