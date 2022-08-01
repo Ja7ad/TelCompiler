@@ -49,7 +49,7 @@ func botResponseMessage() string {
 	msg += "*نتیجه :*\n"
 	msg += "\n`%s`\n"
 	msg += "*منابع مصرف شده :*\n"
-	msg += "\n__%s__\n\n"
+	msg += "\n`%s`\n\n"
 	msg += "%s"
 	return msg
 }
