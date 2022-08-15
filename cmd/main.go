@@ -12,6 +12,9 @@ import (
 	"log"
 	"net/http"
 	"net/http/pprof"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -31,12 +34,13 @@ func main() {
 	go func(provider string) {
 		bot.ProcessUpdate(provider)
 	}(opt.Provider)
-	log.Println("bot started")
 	go func() {
 		if err := http.ListenAndServe(fmt.Sprintf(":%s", opt.Port), pprofService()); err != nil {
 			log.Fatal(err)
 		}
 	}()
+	shutdownBot()
+	log.Println("bot started")
 	global.Bot.Start()
 
 }
@@ -76,4 +80,14 @@ func pprofService() *http.ServeMux {
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write([]byte("telcompiler is okey!!"))
+}
+
+func shutdownBot() {
+	signals := make(chan os.Signal, 1)
+	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		<-signals
+		log.Println("shutting down bot")
+		global.Bot.Stop()
+	}()
 }

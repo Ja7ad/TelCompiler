@@ -8,12 +8,14 @@ import (
 	"github.com/ja7ad/telcompiler/global"
 	"log"
 	"strings"
+	"time"
 )
 
 func InitBot(token string, proxyAddr, proxyUser, proxyPass string) error {
 	settings := telebot.Settings{
 		Token:   token,
 		Updates: 2000,
+		Poller:  &telebot.LongPoller{Timeout: 10 * time.Second},
 	}
 	if len(proxyAddr) != 0 {
 		settings.Proxy = &telebot.Proxy{
