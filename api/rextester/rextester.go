@@ -3,8 +3,8 @@ package rextester
 import (
 	"encoding/json"
 	"errors"
+	"github.com/ja7ad/telcompiler/api/client"
 	"strings"
-	"telcompiler/api/client"
 )
 
 const rexTesterAddress = "https://rextester.com/rundotnet/Run"

@@ -1,8 +1,8 @@
 package bot
 
 import (
+	"github.com/ja7ad/telcompiler/api/rextester"
 	"strings"
-	"telcompiler/api/rextester"
 )
 
 const (

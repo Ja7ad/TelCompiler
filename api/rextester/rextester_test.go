@@ -2,9 +2,9 @@ package rextester
 
 import (
 	"crypto/tls"
+	"github.com/ja7ad/telcompiler/global"
 	"github.com/valyala/fasthttp"
 	"sync"
-	"telcompiler/global"
 	"testing"
 	"time"
 )

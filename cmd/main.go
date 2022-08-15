@@ -5,34 +5,35 @@ import (
 	"expvar"
 	"fmt"
 	"github.com/getsentry/sentry-go"
+	"github.com/ja7ad/telcompiler/bot"
+	"github.com/ja7ad/telcompiler/global"
+	"github.com/ja7ad/telcompiler/options"
 	"github.com/valyala/fasthttp"
-	"gopkg.in/telebot.v3/middleware"
 	"log"
 	"net/http"
 	"net/http/pprof"
-	"os"
-	"telcompiler/bot"
-	"telcompiler/global"
 	"time"
 )
 
 func main() {
-	if len(os.Getenv("SENTRY_DSN")) != 0 {
-		if err := initSentry(); err != nil {
+	opt := options.InitOptions()
+	if len(opt.SentryDSN) != 0 {
+		if err := initSentry(opt.SentryDSN); err != nil {
 			log.Fatalf("error on initilize sentry %v", err)
 		}
 	}
-	if err := bot.InitBot(); err != nil {
+	if err := bot.InitBot(opt.Token, opt.ProxyAddress, opt.ProxyUser, opt.ProxyPass); err != nil {
 		sentry.CaptureException(err)
 		log.Fatalf("error on initilize bot %v", err)
 	}
 	initClient()
-	global.Bot.Use(middleware.Logger())
 	bot.Commands()
-	go bot.ProcessUpdate()
+	go func(provider string) {
+		bot.ProcessUpdate(provider)
+	}(opt.Provider)
 	log.Println("bot started")
 	go func() {
-		if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), pprofService()); err != nil {
+		if err := http.ListenAndServe(fmt.Sprintf(":%s", opt.Port), pprofService()); err != nil {
 			log.Fatal(err)
 		}
 	}()
@@ -40,9 +41,9 @@ func main() {
 
 }
 
-func initSentry() error {
+func initSentry(dsn string) error {
 	if err := sentry.Init(sentry.ClientOptions{
-		Dsn:              os.Getenv("SENTRY_DSN"),
+		Dsn:              dsn,
 		TracesSampleRate: 1.0,
 	}); err != nil {
 		return err

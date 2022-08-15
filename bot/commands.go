@@ -1,6 +1,6 @@
 package bot
 
-import "telcompiler/global"
+import "github.com/ja7ad/telcompiler/global"
 
 func Commands() {
 	global.Bot.Handle("/start", start)

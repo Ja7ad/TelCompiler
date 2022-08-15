@@ -1,6 +1,6 @@
 package bot
 
-import "gopkg.in/telebot.v3"
+import "github.com/Ja7ad/telebot"
 
 func start(ctx telebot.Context) error {
 	return ctx.Send(MSG_START)

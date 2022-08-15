@@ -3,9 +3,9 @@ package client
 import (
 	"encoding/json"
 	"github.com/getsentry/sentry-go"
+	"github.com/ja7ad/telcompiler/global"
 	"github.com/valyala/fasthttp"
 	"log"
-	"telcompiler/global"
 )
 
 func APIRequest(url string, body any) ([]byte, error) {

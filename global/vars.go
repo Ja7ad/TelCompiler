@@ -1,8 +1,8 @@
 package global
 
 import (
+	"github.com/Ja7ad/telebot"
 	"github.com/valyala/fasthttp"
-	"gopkg.in/telebot.v3"
 )
 
 var (
