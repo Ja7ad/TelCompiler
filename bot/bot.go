@@ -15,7 +15,7 @@ func InitBot(token string, proxyAddr, proxyUser, proxyPass string) error {
 	settings := telebot.Settings{
 		Token:   token,
 		Updates: 2000,
-		Poller:  &telebot.LongPoller{Timeout: 10 * time.Second},
+		Poller:  &telebot.LongPoller{Timeout: 2 * time.Second},
 	}
 	if len(proxyAddr) != 0 {
 		settings.Proxy = &telebot.Proxy{
