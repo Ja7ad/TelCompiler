@@ -68,7 +68,7 @@ func normalizeReplayMessage(msg *telebot.Message, result *rextester.Result, prov
 }
 
 func getLanguageCode(msg string) int {
-	if len(msg) > 100 {
+	if len(msg) > 100 || !strings.Contains(msg, "به زبان"){
 		return 0
 	}
 	if strings.Contains(msg, "Go") {
